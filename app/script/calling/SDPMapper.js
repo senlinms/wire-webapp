@@ -70,7 +70,8 @@ z.calling.SDPMapper = {
       throw new z.calling.CallError(z.calling.CallError.TYPE.NOT_FOUND, 'Cannot rewrite undefined SDP');
     }
 
-    if (sdp_source === z.calling.enum.SDP_SOURCE.LOCAL) {
+    const is_local_sdp = sdp_source === z.calling.enum.SDP_SOURCE.LOCAL;
+    if (is_local_sdp) {
       rtc_sdp.sdp = rtc_sdp.sdp.replace('UDP/TLS/', '');
     }
 
@@ -81,7 +82,7 @@ z.calling.SDPMapper = {
       let outline = sdp_line;
 
       if (sdp_line.startsWith('t=')) {
-        if (sdp_source === z.calling.enum.SDP_SOURCE.LOCAL) {
+        if (is_local_sdp) {
           sdp_lines.push(sdp_line);
 
           const browser_string = `${z.util.Environment.browser.name} ${z.util.Environment.browser.version}`;
@@ -97,7 +98,7 @@ z.calling.SDPMapper = {
 
       // Remove once obsolete due to high uptake of clients based on AVS build 3.3.11 containing fix for AUDIO-1215
       } else if (sdp_line.startsWith('a=mid')) {
-        if (sdp_source === z.calling.enum.SDP_SOURCE.REMOTE && z.util.Environment.browser.firefox && rtc_sdp.type === z.calling.rtc.SDP_TYPE.ANSWER) {
+        if (!is_local_sdp && z.util.Environment.browser.firefox && rtc_sdp.type === z.calling.rtc.SDP_TYPE.ANSWER) {
           if (sdp_line === 'a=mid:data') {
             outline = 'a=mid:sdparta_2';
           }
@@ -105,13 +106,19 @@ z.calling.SDPMapper = {
 
       // Code to nail in bit-rate and ptime settings for improved performance and experience
       } else if (sdp_line.startsWith('m=audio')) {
-        if (flow_et.negotiation_mode() === z.calling.enum.SDP_NEGOTIATION_MODE.ICE_RESTART || (sdp_source === z.calling.enum.SDP_SOURCE.LOCAL && flow_et.is_group)) {
+        const is_ice_restart = flow_et.negotiation_mode() === z.calling.enum.SDP_NEGOTIATION_MODE.ICE_RESTART;
+        const is_local_sdp_in_group = is_local_sdp && flow_et.is_group;
+
+        if (is_local_sdp_in_group || is_ice_restart) {
           sdp_lines.push(sdp_line);
           outline = `b=AS:${z.calling.SDPMapper.CONFIG.AUDIO_BITRATE}`;
         }
 
       } else if (sdp_line.startsWith('a=rtpmap')) {
-        if (flow_et.negotiation_mode() === z.calling.enum.SDP_NEGOTIATION_MODE.ICE_RESTART || (sdp_source === z.calling.enum.SDP_SOURCE.LOCAL && flow_et.is_group)) {
+        const is_ice_restart = flow_et.negotiation_mode() === z.calling.enum.SDP_NEGOTIATION_MODE.ICE_RESTART;
+        const is_local_sdp_in_group = is_local_sdp && flow_et.is_group;
+
+        if (is_local_sdp_in_group || is_ice_restart) {
           if (z.util.StringUtil.includes(sdp_line, 'opus')) {
             sdp_lines.push(sdp_line);
             outline = `a=ptime:${z.calling.SDPMapper.CONFIG.AUDIO_PTIME}`;
@@ -119,7 +126,8 @@ z.calling.SDPMapper = {
         }
 
       } else if (sdp_line.startsWith('a=fmtp')) {
-        if (flow_et.is_cbr_enabled() && sdp_line.startsWith('a=fmtp:111')) {
+        const should_use_cbr = z.util.Environment.browser.supports.continuous_bit_rate && flow_et.is_cbr_enabled();
+        if (is_local_sdp && should_use_cbr && sdp_line.startsWith('a=fmtp:111')) {
           outline = `${sdp_line};cbr=1`;
         }
 

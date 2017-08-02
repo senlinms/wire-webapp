@@ -162,6 +162,11 @@ z.calling.CallMessageBuilder = (function() {
       }
     }
 
+    if (z.util.Environment.browser.supports.continuous_bit_rate) {
+      const {audio_cbr: audio_cbr_state} = self_state;
+      payload.props.audio_cbr = audio_cbr_state;
+    }
+
     if (additional_payload) {
       payload = $.extend(payload, additional_payload);
     }
