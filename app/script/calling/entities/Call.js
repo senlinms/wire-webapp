@@ -89,11 +89,13 @@ z.calling.entities.Call = class Call {
     this.local_media_stream = media_stream_handler.local_media_stream;
     this.local_media_type = media_stream_handler.local_media_type;
     this.remote_media_type = ko.observable(z.media.MediaType.NONE);
+    this.remote_audio_cbr = ko.observable(false);
 
     // Statistics
     this._reset_timer();
 
     // Computed values
+    this.is_cbr_enabled = ko.pureComputed(() => this.self_state.audio_cbr() && this.remote_audio_cbr());
     this.is_declined = ko.pureComputed(() => this.state() === z.calling.enum.CALL_STATE.REJECTED);
 
     this.is_ongoing_on_another_client = ko.pureComputed(() => this.self_user_joined() && !this.self_client_joined());
@@ -618,6 +620,7 @@ z.calling.entities.Call = class Call {
    */
   _update_remote_state() {
     let media_type_changed = false;
+    let cbr_enabled = true;
 
     this.participants().forEach(({state}) => {
       if (state.screen_send()) {
@@ -627,11 +630,17 @@ z.calling.entities.Call = class Call {
         this.remote_media_type(z.media.MediaType.VIDEO);
         media_type_changed = true;
       }
+
+      if (!state.audio_cbr()) {
+        cbr_enabled = false;
+      }
     });
 
     if (!media_type_changed) {
       this.remote_media_type(z.media.MediaType.AUDIO);
     }
+
+    this.remote_cbr_enabled(cbr_enabled);
   }
 
 

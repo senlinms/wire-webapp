@@ -103,7 +103,6 @@ z.calling.CallingRepository = class CallingRepository {
       }
     });
 
-
     this.flow_status = undefined;
     this.debug_enabled = false;
 

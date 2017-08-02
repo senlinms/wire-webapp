@@ -45,6 +45,7 @@ z.calling.entities.Participant = class Participant {
     this.was_connected = false;
 
     this.state = {
+      audio_cbr: ko.observable(true),
       audio_send: ko.observable(true),
       screen_send: ko.observable(false),
       video_send: ko.observable(false),
@@ -108,7 +109,11 @@ z.calling.entities.Participant = class Participant {
     return Promise.resolve()
       .then(() => {
         if (properties) {
-          const {audiosend: audio_send, screensend: screen_send, videosend: video_send} = properties;
+          const {audiocbr: audio_cbr, audiosend: audio_send, screensend: screen_send, videosend: video_send} = properties;
+
+          if (audio_cbr !== undefined) {
+            this.state.audio_cbr(audio_cbr === z.calling.enum.PROPERTY_STATE.TRUE);
+          }
 
           if (audio_send !== undefined) {
             this.state.audio_send(audio_send === z.calling.enum.PROPERTY_STATE.TRUE);

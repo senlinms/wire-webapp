@@ -118,8 +118,12 @@ z.calling.SDPMapper = {
           }
         }
 
-      // Workaround for incompatibility between Chrome 57 and AVS builds. Remove once update of clients with AVS 3.3.x is high enough.
       } else if (sdp_line.startsWith('a=fmtp')) {
+        if (flow_et.is_cbr_enabled() && sdp_line.startsWith('a=fmtp:111')) {
+          outline = `${sdp_line};cbr=1`;
+        }
+
+        // Workaround for incompatibility between Chrome 57 and AVS builds. Remove once update of clients with AVS 3.3.x is high enough.
         if (sdp_line === 'a=fmtp:125 apt=100') {
           outline = 'a=fmtp:125 apt=96';
         }

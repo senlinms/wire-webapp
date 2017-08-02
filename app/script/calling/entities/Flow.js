@@ -55,6 +55,7 @@ z.calling.entities.Flow = class Flow {
     // States
     this.is_answer = ko.observable(false);
     this.self_state = this.call_et.self_state;
+    this.is_cbr_enabled = this.self_state.audio_cbr;
 
     // Audio
     this.audio = new z.calling.entities.FlowAudio(this, this.calling_repository.media_repository);
