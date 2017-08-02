@@ -51,6 +51,11 @@ z.ViewModel.content.PreferencesOptionsViewModel = class PreferencesOptionsViewMo
       amplify.publish(z.event.WebApp.ANALYTICS.EVENT, z.tracking.EventName.SOUND_SETTINGS_CHANGED, {value: tracking_value});
     });
 
+    this.option_calling_vbr = ko.observable();
+    this.option_calling_vbr.subscribe((calling_vbr_preference) => {
+      this.properties_repository.save_preference(z.properties.PROPERTIES_TYPE.CALLING.VARIABLE_BIT_RATE, calling_vbr_preference);
+    });
+
     this.option_emoji_replace_inline = ko.observable();
     this.option_emoji_replace_inline.subscribe((emoji_replace_inline_preference) => {
       this.properties_repository.save_preference(z.properties.PROPERTIES_TYPE.EMOJI.REPLACE_INLINE, emoji_replace_inline_preference);
@@ -84,6 +89,7 @@ z.ViewModel.content.PreferencesOptionsViewModel = class PreferencesOptionsViewMo
 
   update_properties(properties) {
     this.option_audio(properties.settings.sound.alerts);
+    this.option_calling_vbr(properties.settings.calling.vbr);
     this.option_emoji_replace_inline(properties.settings.emoji.replace_inline);
     this.option_previews_send(properties.settings.previews.send);
     this.option_privacy(properties.settings.privacy.improve_wire);

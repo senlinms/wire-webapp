@@ -125,6 +125,9 @@ z.properties.PropertiesRepository = class PropertiesRepository {
           this.logger.info(`Saved updated preference: '${properties_type}' - '${updated_preference}'`);
 
           switch (properties_type) {
+            case z.properties.PROPERTIES_TYPE.CALLING.VARIABLE_BIT_RATE:
+              amplify.publish(z.event.WebApp.PROPERTIES.UPDATE.CALLING.VARIABLE_BIT_RATE, updated_preference);
+              break;
             case z.properties.PROPERTIES_TYPE.CONTACT_IMPORT.GOOGLE:
             case z.properties.PROPERTIES_TYPE.CONTACT_IMPORT.MACOS:
               amplify.publish(z.event.WebApp.PROPERTIES.UPDATE.CONTACTS, updated_preference);

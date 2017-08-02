@@ -92,7 +92,6 @@ z.media.MediaStreamHandler = class MediaStreamHandler {
     };
 
     this.self_stream_state = {
-      audio_cbr: ko.observable(true),
       audio_send: ko.observable(true),
       screen_send: ko.observable(false),
       video_send: ko.observable(false),

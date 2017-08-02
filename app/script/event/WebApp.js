@@ -166,6 +166,9 @@ z.event.WebApp = {
   },
   PROPERTIES: {
     UPDATE: {
+      CALLING: {
+        VARIABLE_BIT_RATE: 'wire.webapp.properties.update.calling.variable_bit_rate',
+      },
       CONTACTS: 'wire.webapp.properties.update.contacts',
       EMOJI: {
         REPLACE_INLINE: 'wire.webapp.properties.update.emoji.replace_inline',

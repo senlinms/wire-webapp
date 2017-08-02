@@ -26,6 +26,17 @@
       <!-- /ko -->
 
       <section class="preferences-section">
+        <header class="preferences-header" data-bind="l10n_text: z.string.preferences_options_calling"></header>
+        <div class="preferences-option">
+          <div class="preferences-option-icon checkbox text-theme" data-bind="attr: {'data-uie-value': option_calling_vbr}" data-uie-name="status-preference-vbr">
+            <input type="checkbox" id="calling-vbr-checkbox" data-bind="checked: option_calling_vbr">
+            <label class="preferences-options-checkbox-label" for="calling-vbr-checkbox" data-bind="l10n_text: z.string.preferences_options_calling_vbr_checkbox"></label>
+          </div>
+        </div>
+        <div class="preferences-detail" data-bind="l10n_text: z.string.preferences_options_calling_vbr_detail"></div>
+      </section>
+
+      <section class="preferences-section">
         <header class="preferences-header" data-bind="l10n_text: z.string.preferences_options_audio"></header>
         <div class="preferences-option">
           <div class="preferences-options-radio">

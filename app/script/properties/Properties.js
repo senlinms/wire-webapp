@@ -26,6 +26,9 @@ z.properties.Properties = class Properties {
   constructor() {
     this[z.properties.PROPERTIES_TYPE.VERSION] = 1;
     this.settings = {
+      calling: {
+        vbr: true,
+      },
       emoji: {
         replace_inline: true,
       },

@@ -23,6 +23,9 @@ window.z = window.z || {};
 window.z.properties = z.properties || {};
 
 z.properties.PROPERTIES_TYPE = {
+  CALLING: {
+    VARIABLE_BIT_RATE: 'settings.calling.vbr',
+  },
   CONTACT_IMPORT: {
     GOOGLE: 'contact_import.google',
     MACOS: 'contact_import.macos',

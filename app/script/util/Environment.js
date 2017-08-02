@@ -75,6 +75,9 @@ window.z.util = z.util || {};
       }
       return this.is_chrome() || this.is_firefox() || this.is_opera();
     },
+    supports_continuous_bit_rate() => {
+      return this.supports_calling() && this.is_chrome() && this.get_version() >= 60;
+    },
     supports_indexed_db: () => !!window.indexedDB,
     supports_media_devices: () => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
     supports_notifications: () => {
@@ -136,6 +139,7 @@ window.z.util = z.util || {};
       supports: {
         audio_output_selection: _check.supports_audio_output_selection(),
         calling: _check.supports_calling(),
+        continuous_bit_rate: _check.supports_continuous_bit_rate(),
         indexed_db: _check.supports_indexed_db(),
         media_devices: _check.supports_media_devices(),
         notifications: _check.supports_notifications(),

@@ -62,6 +62,7 @@ z.calling.CallingRepository = class CallingRepository {
    */
   constructor(calling_service, client_repository, conversation_repository, media_repository, user_repository) {
     this.get_config = this.get_config.bind(this);
+    this.updated_vbr_preference = this.updated_vbr_preference.bind(this);
 
     this.calling_service = calling_service;
     this.client_repository = client_repository;
@@ -92,7 +93,7 @@ z.calling.CallingRepository = class CallingRepository {
     this.remote_media_streams = this.media_repository.stream_handler.remote_media_streams;
     this.self_stream_state = this.media_repository.stream_handler.self_stream_state;
 
-    this.self_state = this.media_stream_handler.self_stream_state;
+    this.self_state = Object.assign(this.media_stream_handler.self_stream_state, {audio_cbr: ko.observable(false)});
 
     this.calls = ko.observableArray([]);
     this.joined_call = ko.pureComputed(() => {
@@ -134,6 +135,10 @@ z.calling.CallingRepository = class CallingRepository {
     amplify.subscribe(z.event.WebApp.DEBUG.UPDATE_LAST_CALL_STATUS, this.store_flow_status.bind(this));
     amplify.subscribe(z.event.WebApp.EVENT.UPDATE_TIME_OFFSET, this.update_time_offset.bind(this));
     amplify.subscribe(z.event.WebApp.LIFECYCLE.LOADED, this.get_config);
+    amplify.subscribe(z.event.WebApp.PROPERTIES.UPDATE.CALLING.VARIABLE_BIT_RATE, this.updated_vbr_preference);
+    amplify.subscribe(z.event.WebApp.PROPERTIES.UPDATED, (properties) => {
+      this.updated_vbr_preference(properties.settings.calling.vbr);
+    });
     amplify.subscribe(z.util.Logger.prototype.LOG_ON_DEBUG, this.set_debug_state.bind(this));
   }
 
@@ -1373,6 +1378,15 @@ z.calling.CallingRepository = class CallingRepository {
   store_flow_status(flow_status) {
     if (flow_status) {
       this.flow_status = flow_status;
+    }
+  }
+
+  updated_vbr_preference(updated_vbr_preference) {
+    const should_use_cbr = !updated_vbr_preference;
+
+    if (this.self_state.audio_cbr() !== should_use_cbr) {
+      this.self_state.audio_cbr(should_use_cbr);
+      this.logger.debug(`Set continuous bit rate mode to '${should_use_cbr}'`);
     }
   }
 
