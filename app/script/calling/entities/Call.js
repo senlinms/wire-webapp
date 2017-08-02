@@ -620,7 +620,7 @@ z.calling.entities.Call = class Call {
    */
   _update_remote_state() {
     let media_type_changed = false;
-    let audio_cbr_enabled = true;
+    let audio_cbr_enabled = !!this.participants().length;
 
     this.participants().forEach(({state}) => {
       if (state.screen_send()) {
@@ -640,6 +640,7 @@ z.calling.entities.Call = class Call {
       this.remote_media_type(z.media.MediaType.AUDIO);
     }
 
+    console.log('remote_audio_cbr', audio_cbr_enabled);
     this.remote_audio_cbr(audio_cbr_enabled);
   }
 

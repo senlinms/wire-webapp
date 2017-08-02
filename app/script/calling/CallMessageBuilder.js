@@ -164,7 +164,7 @@ z.calling.CallMessageBuilder = (function() {
 
     if (z.calling.CallingRepository.supports_cbr) {
       const {audio_cbr: audio_cbr_state} = self_state;
-      payload.props.audio_cbr = audio_cbr_state;
+      payload.props.audio_cbr = audio_cbr_state();
     }
 
     if (additional_payload) {
