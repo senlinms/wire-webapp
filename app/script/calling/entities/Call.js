@@ -620,7 +620,7 @@ z.calling.entities.Call = class Call {
    */
   _update_remote_state() {
     let media_type_changed = false;
-    let cbr_enabled = true;
+    let audio_cbr_enabled = true;
 
     this.participants().forEach(({state}) => {
       if (state.screen_send()) {
@@ -632,7 +632,7 @@ z.calling.entities.Call = class Call {
       }
 
       if (!state.audio_cbr()) {
-        cbr_enabled = false;
+        audio_cbr_enabled = false;
       }
     });
 
@@ -640,7 +640,7 @@ z.calling.entities.Call = class Call {
       this.remote_media_type(z.media.MediaType.AUDIO);
     }
 
-    this.remote_cbr_enabled(cbr_enabled);
+    this.remote_audio_cbr(audio_cbr_enabled);
   }
 
 

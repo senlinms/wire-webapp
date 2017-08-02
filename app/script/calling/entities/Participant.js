@@ -111,7 +111,7 @@ z.calling.entities.Participant = class Participant {
         if (properties) {
           const {audiocbr: audio_cbr, audiosend: audio_send, screensend: screen_send, videosend: video_send} = properties;
 
-          if (audio_cbr !== undefined) {
+          if (z.calling.CallingRepository.supports_cbr && audio_cbr !== undefined) {
             this.state.audio_cbr(audio_cbr === z.calling.enum.PROPERTY_STATE.TRUE);
           }
 

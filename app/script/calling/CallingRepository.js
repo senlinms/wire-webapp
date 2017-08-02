@@ -44,6 +44,14 @@ z.calling.CallingRepository = class CallingRepository {
   }
 
   /**
+   * Extended check for cbr support of browser.
+   * @returns {boolean} True if cbr is supported
+   */
+  static get supports_cbr() {
+    return z.util.Environment.browser.supports.continuous_bit_rate;
+  }
+
+  /**
    * Extended check for screen sharing support of browser.
    * @returns {boolean} True if screen sharing is supported
    */

@@ -126,7 +126,7 @@ z.calling.SDPMapper = {
         }
 
       } else if (sdp_line.startsWith('a=fmtp')) {
-        const should_use_cbr = z.util.Environment.browser.supports.continuous_bit_rate && flow_et.is_cbr_enabled();
+        const should_use_cbr = z.calling.CallingRepository.supports_cbr && flow_et.is_cbr_enabled();
         if (is_local_sdp && should_use_cbr && sdp_line.startsWith('a=fmtp:111')) {
           outline = `${sdp_line};cbr=1`;
         }
